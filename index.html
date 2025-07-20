@@ -26,11 +26,15 @@
       align-items: center;
     }
 
+    #container {
+      width: 90vw;
+      overflow: hidden;
+    }
+
     #pi {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      max-width: 90vw;
-      line-height: 1.2;
+      display: inline-block;
+      white-space: nowrap;
+      transition: transform 0.8s ease;
     }
 
     .digit {
@@ -52,13 +56,16 @@
   </style>
 </head>
 <body>
-  <div id="pi">3.</div>
+  <div id="container">
+    <div id="pi">3.</div>
+  </div>
 
   <script>
     let piDigits = '';
     let currentIndex = 0;
-    let fetchStart = 0;
+    let fetchStart = 2; // Skip the initial "3."
     const piDiv = document.getElementById('pi');
+    let offset = 0;
 
     async function fetchDigits(count = 100) {
       const url = `https://api.pi.delivery/v1/pi?start=${fetchStart}&numberOfDigits=${count}`;
@@ -87,6 +94,10 @@
         span.textContent = digit;
         piDiv.appendChild(span);
         currentIndex++;
+
+        // Smooth scroll effect by moving the whole #pi div leftward
+        offset -= 1.8; // Adjust based on font-size and spacing
+        piDiv.style.transform = `translateX(${offset}rem)`;
       }
     }, 1000);
   </script>
