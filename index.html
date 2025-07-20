@@ -2,23 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Pi Digits</title>
+  <title>Infinite Pi</title>
   <style>
     body {
       margin: 0;
+      background: radial-gradient(circle, rgba(0,255,0,0.1) 1px, transparent 1px),
+                  radial-gradient(circle, rgba(0,255,0,0.1) 1px, transparent 1px);
+      background-position: 0 0, 10px 10px;
+      background-size: 20px 20px;
       background-color: black;
-      color: lime;
       font-family: monospace;
       font-size: 3rem;
+      color: lime;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      overflow: hidden;
     }
+
     #pi {
-      white-space: pre;
+      white-space: pre-wrap;
       word-wrap: break-word;
       max-width: 90vw;
+      line-height: 1.2;
+    }
+
+    .digit {
+      opacity: 0;
+      animation: fadein 1s ease forwards;
+      display: inline-block;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: scale(0.8); }
+      to   { opacity: 1; transform: scale(1); }
     }
   </style>
 </head>
@@ -26,18 +44,36 @@
   <div id="pi">3.</div>
 
   <script>
-    // Digits of pi (without "3.")
-    const piDigits = `
-1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091
-`.replace(/\s/g, '');
+    let piDigits = '';
+    let currentIndex = 0;
+    let fetchStart = 0;
+    const piDiv = document.getElementById('pi');
 
-    let index = 0;
-    const piDiv = document.getElementById("pi");
+    async function fetchDigits(count = 100) {
+      const url = `https://api.pi.delivery/v1/pi?start=${fetchStart}&numberOfDigits=${count}`;
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        piDigits += data.content;
+        fetchStart += count;
+      } catch (e) {
+        console.error('Error fetching digits:', e);
+      }
+    }
 
-    setInterval(() => {
-      if (index < piDigits.length) {
-        piDiv.textContent += piDigits[index];
-        index++;
+    fetchDigits(500);
+
+    setInterval(async () => {
+      if (currentIndex >= piDigits.length - 10) {
+        await fetchDigits(500);
+      }
+
+      if (currentIndex < piDigits.length) {
+        const span = document.createElement('span');
+        span.className = 'digit';
+        span.textContent = piDigits[currentIndex];
+        piDiv.appendChild(span);
+        currentIndex++;
       }
     }, 1000);
   </script>
