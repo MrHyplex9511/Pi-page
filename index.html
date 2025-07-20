@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pi Digits</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      color: lime;
+      font-family: monospace;
+      font-size: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #pi {
+      white-space: pre;
+      word-wrap: break-word;
+      max-width: 90vw;
+    }
+  </style>
+</head>
+<body>
+  <div id="pi">3.</div>
+
+  <script>
+    // Digits of pi (without "3.")
+    const piDigits = `
+1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091
+`.replace(/\s/g, '');
+
+    let index = 0;
+    const piDiv = document.getElementById("pi");
+
+    setInterval(() => {
+      if (index < piDigits.length) {
+        piDiv.textContent += piDigits[index];
+        index++;
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
