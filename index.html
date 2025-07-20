@@ -4,21 +4,26 @@
   <meta charset="UTF-8">
   <title>Infinite Pi</title>
   <style>
-    body {
+    html, body {
       margin: 0;
-      background: radial-gradient(circle, rgba(0,255,0,0.1) 1px, transparent 1px),
-                  radial-gradient(circle, rgba(0,255,0,0.1) 1px, transparent 1px);
-      background-position: 0 0, 10px 10px;
-      background-size: 20px 20px;
+      padding: 0;
+      height: 100%;
       background-color: black;
+      overflow: hidden;
+    }
+
+    body {
+      background-image:
+        radial-gradient(circle, rgba(0, 255, 0, 0.15) 1px, transparent 1px),
+        radial-gradient(circle, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-position: 0 0, 20px 20px;
       font-family: monospace;
       font-size: 3rem;
       color: lime;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      overflow: hidden;
     }
 
     #pi {
@@ -30,13 +35,19 @@
 
     .digit {
       opacity: 0;
-      animation: fadein 1s ease forwards;
+      animation: fadeIn 0.8s ease forwards;
       display: inline-block;
     }
 
-    @keyframes fadein {
-      from { opacity: 0; transform: scale(0.8); }
-      to   { opacity: 1; transform: scale(1); }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.6);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
   </style>
 </head>
@@ -61,6 +72,7 @@
       }
     }
 
+    // Initial fetch
     fetchDigits(500);
 
     setInterval(async () => {
@@ -69,9 +81,10 @@
       }
 
       if (currentIndex < piDigits.length) {
+        const digit = piDigits[currentIndex];
         const span = document.createElement('span');
         span.className = 'digit';
-        span.textContent = piDigits[currentIndex];
+        span.textContent = digit;
         piDiv.appendChild(span);
         currentIndex++;
       }
